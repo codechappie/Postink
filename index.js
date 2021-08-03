@@ -17,7 +17,7 @@ let id = "";
 // const linkedin = LinkedIn({
 //   access_token: auth_token,
 // });
-
+//
 // https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=process.env.CLIENT_ID&redirect_uri=http%3A%2F%2Flocalhost%${3Aprocess.env.PORT}%`Fcallback&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_socil
 // http%3A%2F%2Flocalhost%${3Aprocess.env.PORT}%`Fcallback
 
