@@ -1,5 +1,7 @@
 const express = require("express");
 const axios = require("axios").default;
+require("dotenv").config();
+
 const LinkedIn = require("linkedin-api-wrapper");
 
 const app = express();
@@ -13,7 +15,7 @@ let id = "";
 //   access_token: auth_token,
 // });
 
-// https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78zj5z75j2zjcm&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_social
+// https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=process.env.CLIENT_ID&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_socil
 // http%3A%2F%2Flocalhost%3A3001%2Fcallback
 
 app.get("/profile", (req, res) => {
@@ -88,7 +90,7 @@ app.get("/login", (req, res) => {
   }
 
   res.redirect(
-    "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78zj5z75j2zjcm&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_social"
+    `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_social`
   );
 });
 
@@ -108,8 +110,8 @@ app.get("/callback", function (req, res) {
         grant_type: "authorization_code",
         code: req.query.code,
         redirect_uri: "http://localhost:3001/callback",
-        client_id: "78zj5z75j2zjcm",
-        client_secret: "xfilpbu8WGBmVmcr",
+        client_id: process.env.CLIENT_ID,
+        client_secret: process.env.CLIENT_SECRET,
       },
     })
     .then((response) => {
