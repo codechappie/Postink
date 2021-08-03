@@ -2,10 +2,13 @@ const express = require("express");
 const axios = require("axios").default;
 require("dotenv").config();
 
-const LinkedIn = require("linkedin-api-wrapper");
+// const LinkedIn = require("linkedin-api-wrapper");
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT;
+
+// const BASE_URL = process.env.DEV_URL;
+const BASE_URL = process.env.PROD_URL;
 
 let access_token = "";
 let name = "";
@@ -15,8 +18,8 @@ let id = "";
 //   access_token: auth_token,
 // });
 
-// https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=process.env.CLIENT_ID&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_socil
-// http%3A%2F%2Flocalhost%3A3001%2Fcallback
+// https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=process.env.CLIENT_ID&redirect_uri=http%3A%2F%2Flocalhost%${3Aprocess.env.PORT}%`Fcallback&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_socil
+// http%3A%2F%2Flocalhost%${3Aprocess.env.PORT}%`Fcallback
 
 app.get("/profile", (req, res) => {
   res.send(`Hola ${name}`);
@@ -86,11 +89,11 @@ app.get("/", (req, res) => {
 
 app.get("/login", (req, res) => {
   if (access_token !== "") {
-    res.redirect("http://localhost:3001/");
+    res.redirect(BASE_URL);
   }
 
   res.redirect(
-    `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_social`
+    `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.CLIENT_ID}&redirect_uri=${BASE_URL}/callback&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_social`
   );
 });
 
@@ -99,7 +102,7 @@ app.get("/callback", function (req, res) {
   console.log("state: ", req.query.state);
 
   if (access_token) {
-    res.redirect("http://localhost:3001/");
+    res.redirect(BASE_URL);
   }
 
   axios
@@ -109,7 +112,7 @@ app.get("/callback", function (req, res) {
       params: {
         grant_type: "authorization_code",
         code: req.query.code,
-        redirect_uri: "http://localhost:3001/callback",
+        redirect_uri: `${BASE_URL}/callback`,
         client_id: process.env.CLIENT_ID,
         client_secret: process.env.CLIENT_SECRET,
       },
@@ -120,7 +123,7 @@ app.get("/callback", function (req, res) {
 
       access_token = response.data.access_token;
       if (access_token) {
-        res.redirect("http://localhost:3001/");
+        res.redirect(BASE_URL);
       }
     })
     .catch((error) => {
@@ -129,7 +132,7 @@ app.get("/callback", function (req, res) {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`Postink listening on port: ${port}`);
 });
 
 // app.close()
